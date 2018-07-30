@@ -1,8 +1,5 @@
 #!/bin/bash
 
-[[ $(pwd) = *fraud-browser-templates* ]] || fail "ERROR: build.sh must be run from the root of this directory"
-export ROOT_DIR=`pwd`
-
 function usage {
     cat <<EOM
 Usage:
@@ -17,11 +14,6 @@ EOM
 function fail {
     >&2 echo "${1}"
     exit 1
-}
-
-function setup {
-    # TODO: Determine dependencies that the machine running this will need
-    echo "Setting up dependencies..."
 }
 
 function build_docker_image {
@@ -47,6 +39,9 @@ function main {
     docker image ls
 }
 
+[[ $(pwd) = *fraud-browser-templates* ]] || fail "ERROR: build.sh must be run from the root of this directory"
+export ROOT_DIR=`pwd`
+
 for arg in "$@"; do
     case "${arg}" in
         --chrome_version=*)
@@ -65,6 +60,5 @@ for arg in "$@"; do
     esac
 done
 
-setup
 main
 cd "${ROOT_DIR}"
