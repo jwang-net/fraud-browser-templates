@@ -21,20 +21,24 @@ function build_docker_image {
         cd base
         echo "Building Docker base image..."
         docker build -t fraud-browser-base .
-        cd "${ROOT_DIR}"
+    elif [ "${1}" = hub ]; then
+        cd hub
+        echo "Building Selenium hub..."
+        docker build -t fraud-selenium-hub .
     else
         cd "${1}"
         export BROWSER_FILENAME=$(find . -name "${EXTENSION}" | sed 's/^.\///')
         export IMAGE_NAME="${BROWSER}"_"${BROWSER_VERSION}"
         echo "Building docker image $IMAGE_NAME with $BROWSER version $BROWSER_VERSION"
         docker build -t "${IMAGE_NAME}" . --build-arg version="${BROWSER_VERSION}" --build-arg filename="${BROWSER_FILENAME}"
-        cd "${ROOT_DIR}"
     fi
+    cd "${ROOT_DIR}"
 }
 
 function main {
     python get_browser.py "${BROWSER}" "${BROWSER_VERSION}"
     build_docker_image base
+    build_docker_image hub
     build_docker_image "${BROWSER}"
     docker image ls
 }

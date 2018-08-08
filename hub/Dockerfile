@@ -1,11 +1,5 @@
 FROM fraud-browser-base
 
-ADD . /home
-ARG version=None
-ARG filename=None
-ARG version
-ARG filename
-
 EXPOSE 4444
 
 ENV GRID_MAX_SESSION 5
@@ -19,7 +13,10 @@ ENV GRID_DEBUG false
 ENV GRID_HUB_PORT 4444
 ENV GRID_HUB_HOST "0.0.0.0"
 
-RUN apt-get -qq install -y
-RUN echo "Installing chrome version $version"
-RUN echo "Filename: $filename"
-RUN dpkg -i $filename
+COPY generate_config \
+    entry_point.sh \
+    /opt/bin/
+
+RUN /opt/bin/generate_config > /opt/selenium/config.json
+
+CMD ["/opt/bin/entry_point.sh"]
