@@ -13,10 +13,7 @@ ENV GRID_DEBUG false
 ENV GRID_HUB_PORT 4444
 ENV GRID_HUB_HOST "0.0.0.0"
 
-COPY generate_config \
-    entry_point.sh \
-    /opt/bin/
+COPY config.json /home
 
-RUN /opt/bin/generate_config > /opt/selenium/config.json
-
-CMD ["/opt/bin/entry_point.sh"]
+RUN java -jar /home/selenium-server-standalone.jar -role hub \
+  -hubConfig /home/config.json & NODE_PID=$!
