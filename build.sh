@@ -13,7 +13,7 @@ EOM
 
 function fail {
     >&2 echo "${1}"
-    exit 1
+#    exit 1
 }
 
 function build_docker_image {
@@ -43,6 +43,10 @@ function main {
     docker image ls
 }
 
+if [ -z "$@" ]; then
+    fail "ERROR: No args"
+    usage
+fi
 [[ $(pwd) = *fraud-browser-templates* ]] || fail "ERROR: build.sh must be run from the root of this directory"
 export ROOT_DIR=`pwd`
 
