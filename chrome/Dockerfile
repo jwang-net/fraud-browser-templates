@@ -5,31 +5,21 @@ ARG version=None
 ARG filename=None
 ARG version
 ARG filename
+ENV BROWSER_VERSION=$version
 
 # xvfb
 RUN apt-get update \
-  && apt-get -qqy install xvfb \
-  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+  && apt-get -qqy install xvfb
 
-# chrome
-RUN echo "Installing chrome version $version"
-RUN echo "Filename: $filename"
-RUN dpkg -i $filename
-
+# Languages
 RUN apt-get -qqy update \
-  && apt-get -qqy --no-install-recommends install \
-    language-pack-en \
-    tzdata \
-    locales \
+  && apt-get -qqy --no-install-recommends install language-pack-en tzdata locales \
   && locale-gen ${LANGUAGE} \
   && dpkg-reconfigure --frontend noninteractive locales \
   && apt-get -qyy autoremove \
-  && rm -rf /var/lib/apt/lists/* \
   && apt-get -qyy clean
 
-#================
-# Font libraries
-#================
+# Fonts
 RUN apt-get -qqy update \
   && apt-get -qqy --no-install-recommends install \
     libfontconfig \
@@ -41,21 +31,15 @@ RUN apt-get -qqy update \
     fonts-wqy-zenhei \
     fonts-tlwg-loma-otf \
     ttf-ubuntu-font-family \
-  && rm -rf /var/lib/apt/lists/* \
   && apt-get -qyy clean
 
-#========================
-# Selenium Configuration
-#========================
-ENV SCREEN_WIDTH 1360
-ENV SCREEN_HEIGHT 1020
-ENV SCREEN_DEPTH 24
-ENV DISPLAY :99.0
+# Chrome
+RUN echo "Installing chrome version $version"
+RUN echo "Filename: $filename"
+RUN dpkg -i $filename
+RUN rm -rf /var/lib/apt/lists/* /var/cache/apt/* /var/lib/apt/lists/*
 
-
-#==============================
-# Scripts to run Selenium Node
-#==============================
+# Entrypoint script
 COPY entry_point.sh \
     /opt/bin/
 
