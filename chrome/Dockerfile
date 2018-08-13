@@ -39,9 +39,17 @@ RUN echo "Filename: $filename"
 RUN dpkg -i $filename
 RUN rm -rf /var/lib/apt/lists/* /var/cache/apt/* /var/lib/apt/lists/*
 
-# Entrypoint script
-COPY entry_point.sh \
-    /opt/bin/
+# Chrome Driver
+# TODO: Add ability to specify chrome driver version
+RUN CHROME_DRIVER_VERSION=$(echo $(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE)) \
+  && wget --no-verbose https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -O /tmp/chromedriver_linux64.zip \
+  && unzip /tmp/chromedriver_linux64.zip -d /home/selenium \
+  && rm -rf /tmp/chromedriver_linux64.zip \
+  && mv /home/selenium/chromedriver /home/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && chmod u+x /home/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && ln -fs /home/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
 
-RUN chmod u+x /opt/bin/entry_point.sh
-CMD ["/opt/bin/entry_point.sh"]
+RUN chmod u+x /home/entry_point.sh \
+  && chmod u+x /home/generate_config
+RUN /home/generate_config > /home/config.json
+CMD ["/home/entry_point.sh"]

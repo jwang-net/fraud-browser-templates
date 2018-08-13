@@ -37,9 +37,17 @@ function build_docker_image {
 
 function main {
     python get_browser.py "${BROWSER}" "${BROWSER_VERSION}"
+    # Create network
+    docker network create grid
+
+    # Create images
     build_docker_image base
     build_docker_image hub
     build_docker_image "${BROWSER}"
+
+    # Run hub & node
+    docker run -d -p 4444:4444 --net grid --name fraud-hub fraud-selenium-hub
+    docker run -d --net grid -e HUB_HOST=fraud-hub -v /dev/shm:/dev/shm "${IMAGE_NAME}"
     docker image ls
 }
 

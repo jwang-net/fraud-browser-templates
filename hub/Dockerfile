@@ -1,6 +1,10 @@
 FROM fraud-browser-base
 
-COPY config.json /home
+# Entrypoint script
+COPY generate_config /home/selenium
+COPY entry_point.sh /home
 
-RUN java -jar /home/selenium-server-standalone.jar -role hub \
-  -hubConfig /home/config.json & NODE_PID=$!
+RUN chmod u+x /home/entry_point.sh \
+  && chmod u+x /home/selenium/generate_config
+RUN /home/generate_config > /home/selenium/config.json
+CMD ["/home/entry_point.sh"]

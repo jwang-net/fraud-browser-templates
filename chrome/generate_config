@@ -1,7 +1,12 @@
+#!/bin/bash
+
+CHROME_VERSION=$(/usr/bin/google-chrome -version | awk '{ print $3 }')
+
+cat <<_EOF
 {
   "capabilities": [
     {
-      "version": "$BROWSER_VERSION",
+      "version": "$CHROME_VERSION",
       "browserName": "chrome",
       "maxInstances": 1,
       "seleniumProtocol": "WebDriver",
@@ -18,3 +23,4 @@
   "unregisterIfStillDownAfter": 60000,
   "downPollingLimit": 2
 }
+_EOF
