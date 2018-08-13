@@ -8,14 +8,18 @@ bucket = 'fraud-browsers-archive'
 browser = sys.argv[1]
 browser_version = sys.argv[2]
 os = 'linux-x86_64'
+if sys.argv[3] == 'grid':
+    local_path = browser
+else:
+    local_path = '{}_{}'.format(browser, 'simple')
 
 
 if browser == 'chrome':
     key = '{}/{}/chrome64_{}.deb'.format(browser, os, browser_version)
-    local_filename = '{}/chrome64_{}.deb'.format(browser, browser_version)
+    local_filename = '{}/chrome64_{}.deb'.format(local_path, browser_version)
 elif browser == 'firefox':
     key = '{}/{}/firefox_{}.tar.bz2'.format(browser, os, browser_version)
-    local_filename = '{}/firefox_{}.tar.bz2'.format(browser, browser_version)
+    local_filename = '{}/firefox_{}.tar.bz2'.format(local_path, browser_version)
 else:
     raise Exception('ERROR: Unsupported browser {}.'.format(browser))
 

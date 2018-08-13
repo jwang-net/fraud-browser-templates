@@ -3,8 +3,10 @@
 function usage {
     cat <<EOM
 Usage:
-    build.sh (--chrome_version|--firefox_version)
+    build.sh (--simple|--grid) (--chrome_version|--firefox_version)
 
+    --simple                No selenium grid
+    --grid                  With selenium grid
     --chrome_version        Specify chrome version
     --firefox_version       Specify firefox version
 EOM
@@ -16,7 +18,14 @@ function fail {
 #    exit 1
 }
 
-function build_docker_image {
+function build_docker_image_simple {
+    cd "${1}"_simple
+    export BROWSER_FILENAME=$(find . -name "${EXTENSION}" | sed 's/^.\///')
+    export IMAGE_NAME="${BROWSER}"_"${BROWSER_VERSION}"_simple
+    docker build -t "${IMAGE_NAME}" . --build-arg filename="${BROWSER_FILENAME}"
+}
+
+function build_docker_image_grid {
     if [ "${1}" = base ]; then
         cd base
         echo "Building Docker base image..."
@@ -36,30 +45,39 @@ function build_docker_image {
 }
 
 function main {
-    python get_browser.py "${BROWSER}" "${BROWSER_VERSION}"
-    # Create network
-    docker network create grid
+    python get_browser.py "${BROWSER}" "${BROWSER_VERSION}" "${BUILD_MODE}"
 
-    # Create images
-    build_docker_image base
-    build_docker_image hub
-    build_docker_image "${BROWSER}"
-
-    # Run hub & node
-    docker run -d -p 4444:4444 --net grid --name fraud-hub fraud-selenium-hub
-    docker run -d --net grid -e HUB_HOST=fraud-hub -v /dev/shm:/dev/shm "${IMAGE_NAME}"
-    docker image ls
+    if [ "${BUILD_MODE}" = simple ]; then
+        build_docker_image_simple "${BROWSER}"
+    fi
+    
+    if [ "${BUILD_MODE}" = grid ]; then
+        # Create network
+        docker network create grid
+    
+        # Create images
+        build_docker_image_grid base
+        build_docker_image_grid hub
+        build_docker_image_grid "${BROWSER}"
+    
+        # Run hub & node
+        docker run -d -p 4444:4444 --net grid --name fraud-hub fraud-selenium-hub
+        docker run -d --net grid -e HUB_HOST=fraud-hub -v /dev/shm:/dev/shm "${IMAGE_NAME}"
+        docker image ls
+    fi
 }
 
-if [ -z "$@" ]; then
-    fail "ERROR: No args"
-    usage
-fi
-[[ $(pwd) = *fraud-browser-templates* ]] || fail "ERROR: build.sh must be run from the root of this directory"
+#[[ $(pwd) = *fraud-browser-templates* ]] || fail "ERROR: build.sh must be run from the root of this directory"
 export ROOT_DIR=`pwd`
 
 for arg in "$@"; do
     case "${arg}" in
+        --simple)
+            export BUILD_MODE=simple
+            ;;
+        --grid)
+            export BUILD_MODE=grid
+            ;;
         --chrome_version=*)
             export BROWSER_VERSION="${arg#*=}"
             export BROWSER=chrome

@@ -8,29 +8,16 @@ ARG filename
 ENV BROWSER_VERSION=$version
 
 # xvfb
-RUN apt-get update \
+RUN apt-get -qqy update \
   && apt-get -qqy install xvfb
 
-# Languages
+# Languages & fonts
 RUN apt-get -qqy update \
-  && apt-get -qqy --no-install-recommends install language-pack-en tzdata locales \
+  && apt-get -qqy --no-install-recommends install language-pack-en tzdata locales libfontconfig libfreetype6 xfonts-cyrillic \
+    xfonts-scalable fonts-liberation fonts-ipafont-gothic fonts-wqy-zenhei fonts-tlwg-loma-otf ttf-ubuntu-font-family \
   && locale-gen ${LANGUAGE} \
   && dpkg-reconfigure --frontend noninteractive locales \
   && apt-get -qyy autoremove \
-  && apt-get -qyy clean
-
-# Fonts
-RUN apt-get -qqy update \
-  && apt-get -qqy --no-install-recommends install \
-    libfontconfig \
-    libfreetype6 \
-    xfonts-cyrillic \
-    xfonts-scalable \
-    fonts-liberation \
-    fonts-ipafont-gothic \
-    fonts-wqy-zenhei \
-    fonts-tlwg-loma-otf \
-    ttf-ubuntu-font-family \
   && apt-get -qyy clean
 
 # Chrome
