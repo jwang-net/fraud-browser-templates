@@ -2,9 +2,7 @@ import unittest
 from selenium import webdriver
 
 
-class TestTemplate(unittest.TestCase):
-    """Include test cases on a given url"""
-
+class TestExampel(unittest.TestCase):
     def setUp(self):
         """Start web driver"""
         chrome_options = webdriver.ChromeOptions()

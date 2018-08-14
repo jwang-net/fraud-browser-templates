@@ -2,7 +2,9 @@ FROM python:2.7
 
 WORKDIR /home
 ADD . /home
+ARG version=None
 ARG filename=None
+ARG version
 ARG filename
 ENV DISPLAY=:99
 

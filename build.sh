@@ -10,19 +10,14 @@ Usage:
     --chrome_version        Specify chrome version
     --firefox_version       Specify firefox version
 EOM
-    fail
-}
-
-function fail {
-    >&2 echo "${1}"
-#    exit 1
+    exit 1
 }
 
 function build_docker_image_simple {
     cd "${1}"_simple
     export BROWSER_FILENAME=$(find . -name "${EXTENSION}" | sed 's/^.\///')
     export IMAGE_NAME="${BROWSER}"_"${BROWSER_VERSION}"_simple
-    docker build -t "${IMAGE_NAME}" . --build-arg filename="${BROWSER_FILENAME}"
+    docker build -t "${IMAGE_NAME}" . --build-arg version="${BROWSER_VERSION}" --build-arg filename="${BROWSER_FILENAME}"
 }
 
 function build_docker_image_grid {
@@ -52,14 +47,13 @@ function main {
     fi
     
     if [ "${BUILD_MODE}" = grid ]; then
-        # Create network
         docker network create grid
-    
+
         # Create images
         build_docker_image_grid base
         build_docker_image_grid hub
         build_docker_image_grid "${BROWSER}"
-    
+
         # Run hub & node
         docker run -d -p 4444:4444 --net grid --name fraud-hub fraud-selenium-hub
         docker run -d --net grid -e HUB_HOST=fraud-hub -v /dev/shm:/dev/shm "${IMAGE_NAME}"
@@ -67,7 +61,7 @@ function main {
     fi
 }
 
-#[[ $(pwd) = *fraud-browser-templates* ]] || fail "ERROR: build.sh must be run from the root of this directory"
+[[ $(pwd) = *fraud-browser-templates* ]] || echo"$(echo "ERROR: build.sh must be run from the root of this directory" ; exit 1)"
 export ROOT_DIR=`pwd`
 
 for arg in "$@"; do
