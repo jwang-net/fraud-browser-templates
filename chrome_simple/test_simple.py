@@ -2,9 +2,8 @@ import unittest
 from selenium import webdriver
 
 
-class TestExampel(unittest.TestCase):
+class TestExample(unittest.TestCase):
     def setUp(self):
-        """Start web driver"""
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--headless')
@@ -13,11 +12,9 @@ class TestExampel(unittest.TestCase):
         self.driver.implicitly_wait(10)
 
     def tearDown(self):
-        """Stop web driver"""
         self.driver.quit()
 
-    def test_case_1(self):
-        """Find and click top-right button"""
+    def test_1(self):
         try:
             self.driver.get('http://github.com')
         except:
@@ -25,5 +22,5 @@ class TestExampel(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestTemplate)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestExample)
     unittest.TextTestRunner(verbosity=2).run(suite)

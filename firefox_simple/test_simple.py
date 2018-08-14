@@ -4,8 +4,7 @@ from pyvirtualdisplay import Display
 from selenium import webdriver
 
 logging.getLogger().setLevel(logging.INFO)
-
-BASE_URL = 'http://www.example.com/'
+URL = 'http://www.github.com/'
 
 
 def firefox_example():
@@ -24,9 +23,8 @@ def firefox_example():
     browser = webdriver.Firefox(firefox_profile=firefox_profile)
     logging.info('Initialized firefox browser..')
 
-    browser.get(BASE_URL)
-    logging.info('Accessed %s ..', BASE_URL)
-
+    browser.get(URL)
+    logging.info('Accessed %s ..', URL)
     logging.info('Page title: %s', browser.title)
 
     browser.quit()

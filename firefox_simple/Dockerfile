@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
     fonts-liberation libappindicator1 xdg-utils \
     software-properties-common \
     curl unzip wget \
-    xvfb
+    xvfb \
+    vim
 
 RUN GECKODRIVER_VERSION=`curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+'` && \
     wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz && \
