@@ -1,26 +1,28 @@
+import logging
 import unittest
 from selenium import webdriver
 
 
-class TestExample(unittest.TestCase):
-    def setUp(self):
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--disable-gpu')
-        self.driver = webdriver.Chrome(chrome_options=chrome_options)
-        self.driver.implicitly_wait(10)
+logging.getLogger().setLevel(logging.INFO)
+URL = 'http://www.github.com/'
 
-    def tearDown(self):
-        self.driver.quit()
 
-    def test_1(self):
-        try:
-            self.driver.get('http://github.com')
-        except:
-            self.fail()
+def chrome_example():
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--disable-gpu')
+    browser = webdriver.Chrome(chrome_options=chrome_options)
+    browser.implicitly_wait(10)
+
+    logging.info('Prepared chrome browser..')
+
+    browser.get(URL)
+    logging.info('Accessed %s ..', URL)
+    logging.info('Page title: %s', browser.title)
+
+    browser.quit()
 
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestExample)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    chrome_example()
