@@ -1,30 +1,27 @@
-FROM python:2.7
+FROM ubuntu:xenial
 
-WORKDIR /home
-ADD . /home
-ARG version=None
-ARG filename=None
-ARG version
-ARG filename
-ENV DISPLAY=:99
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip \
+    libgconf2-4 libnss3-1d libxss1 \
+    fonts-liberation libappindicator1 xdg-utils \
+    software-properties-common \
+    curl unzip wget \
+    xvfb
 
-RUN apt-get -y update \
-  && apt-get -qq install -y python python-dev python-pip python-virtualenv fonts-liberation libappindicator3-1 \
-    libasound2 libnspr4 libnss3 libxss-dev lsb-release wget unzip vim xdg-utils libfontconfig1 libfontconfig1-dbg
+RUN GECKODRIVER_VERSION=`curl https://github.com/mozilla/geckodriver/releases/latest | grep -Po 'v[0-9]+.[0-9]+.[0-9]+'` && \
+    wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz && \
+    tar -zxf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz -C /usr/local/bin && \
+    chmod +x /usr/local/bin/geckodriver
 
-RUN echo "Installing Firefox version $version"
-RUN echo "Filename: $filename"
-RUN apt-get -qqy update \
-  && tar -C /opt -xjf /home/$filename \
-  && rm /home/$filename
+RUN add-apt-repository -y ppa:ubuntu-mozilla-daily/ppa
+RUN apt-get update && apt-get install -y firefox
 
-RUN GECKODRIVER_VERSION=$(echo $(wget -qO- "https://api.github.com/repos/mozilla/geckodriver/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([0-9.]+)".*/\1/')) \
-  && wget --no-verbose -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIVER_VERSION/geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz \
-  && rm -rf /opt/geckodriver \
-  && tar -C /opt -zxf /tmp/geckodriver.tar.gz \
-  && rm /tmp/geckodriver.tar.gz \
-  && mv /opt/geckodriver /opt/geckodriver-$GECKODRIVER_VERSION \
-  && chmod u+x /opt/geckodriver-$GECKODRIVER_VERSION \
-  && ln -fs /opt/geckodriver-$GECKODRIVER_VERSION /usr/bin/geckodriver
+RUN pip3 install selenium
+RUN pip3 install pyvirtualdisplay
 
-RUN pip install selenium==3.8.0
+ENV APP_HOME /usr/src/app
+WORKDIR /$APP_HOME
+
+COPY . $APP_HOME/
+
+CMD tail -f /dev/null
