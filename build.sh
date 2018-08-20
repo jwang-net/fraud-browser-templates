@@ -61,7 +61,7 @@ function main {
     fi
 }
 
-[[ $(pwd) = *fraud-browser-templates* ]] || echo"$(echo "ERROR: build.sh must be run from the root of this directory" ; exit 1)"
+[[ $(echo $(basename `git rev-parse --show-toplevel`)) = fraud-browser-templates ]] || echo "$(echo "ERROR: build.sh must be run from the root of repo fraud-browser-templates" ; exit 1)"
 export ROOT_DIR=`pwd`
 
 for arg in "$@"; do
