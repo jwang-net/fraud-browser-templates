@@ -9,7 +9,7 @@ ARG filename
 ENV DISPLAY=:99
 
 RUN apt-get -y update \
-  && apt-get -qq install -y python python-dev python-pip python-virtualenv fonts-liberation libappindicator3-1 \
+  && apt-get -qq install -y git python python-dev python-pip python-virtualenv fonts-liberation libappindicator3-1 \
     libasound2 libnspr4 libnss3 libxss-dev lsb-release wget unzip vim xdg-utils libfontconfig1 libfontconfig1-dbg
 
 RUN CHROME_DRIVER_VERSION=$(echo $(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE)) \
@@ -23,3 +23,6 @@ RUN CHROME_DRIVER_VERSION=$(echo $(wget -qO- https://chromedriver.storage.google
 RUN dpkg -i $filename
 RUN echo Chrome version: $(/usr/bin/google-chrome -version | awk '{ print $3 }')
 RUN pip install selenium==3.8.0
+
+RUN chmod u+x /home/entry_point.sh
+CMD ["/home/entry_point.sh"]
