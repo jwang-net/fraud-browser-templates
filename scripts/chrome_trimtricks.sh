@@ -16,5 +16,4 @@ docker exec -it "${CONTAINER_ID}" cd /home/charmer && python setup.py install
 docker exec -it "${CONTAINER_ID}" cd /home/swarm-js && cat requirements.txt | xargs -n 1 pip install
 
 # run tests
-cd /home/charmer
-./test-runner --location=local --chrome --test=/home/swarm-js/test/python/component/test_homies.py
+docker exec -it "${CONTAINER_ID}" cd /home/charmer && ./test-runner --location=local --chrome --test=/home/swarm-js/test/python/component/test_homies.py
