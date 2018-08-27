@@ -10,7 +10,7 @@ cd "${WORKSPACE}"
 source build.sh --simple --chrome_version="$@"
 
 # execute additional stuff on container
-CONTAINER_ID=$(docker run -it -d "${IMAGE_NAME}" /bin/bash)
+CONTAINER_ID=$(docker run -i -d "${IMAGE_NAME}" /bin/bash)
 docker exec "${CONTAINER_ID}" cd /home/pyvault && python setup.py install
 docker exec "${CONTAINER_ID}" cd /home/charmer && python setup.py install
 docker exec "${CONTAINER_ID}" cd /home/swarm-js && cat requirements.txt | xargs -n 1 pip install
