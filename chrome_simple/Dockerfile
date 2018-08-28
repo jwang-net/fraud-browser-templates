@@ -9,7 +9,7 @@ ARG filename
 ENV DISPLAY=:99
 
 RUN apt-get -y update \
-  && apt-get -qq install -y git python python-dev python-pip python-virtualenv fonts-liberation libappindicator3-1 \
+  && apt-get -qq install -y python python-dev python-pip python-virtualenv fonts-liberation libappindicator3-1 \
     libasound2 libnspr4 libnss3 libxss-dev lsb-release wget unzip vim xdg-utils libfontconfig1 libfontconfig1-dbg
 
 RUN CHROME_DRIVER_VERSION=$(echo $(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE)) \
