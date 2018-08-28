@@ -4,7 +4,7 @@
 source "${WORKSPACE}"/cleanup.sh
 cd "${WORKSPACE}"/firefox_simple
 git clone git@github.com:integralads/pyvault.git
-git clone -b SAD-4717 git@github.com:integralads/swarm-js.git
+git clone -b SAD-4717 --single-branch git@github.com:integralads/swarm-js.git
 git clone -b SAD-4717 --single-branch git@github.com:jwang-net/charmer.git
 cd "${WORKSPACE}"
 source build.sh --simple --firefox_version=61.0
