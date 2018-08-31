@@ -18,7 +18,7 @@ if browser == 'chrome':
     key = '{}/{}/chrome64_{}.deb'.format(browser, os, browser_version)
     local_filename = '{}/chrome64_{}.deb'.format(local_path, browser_version)
 elif browser == 'firefox':
-    key = '{}/{}/firefox_{}.tar.bz2'.format(browser, os, browser_version)
+    key = '{}/{}/firefox-{}.tar.bz2'.format(browser, os, browser_version)
     local_filename = '{}/firefox_{}.tar.bz2'.format(local_path, browser_version)
 else:
     raise Exception('ERROR: Unsupported browser {}.'.format(browser))

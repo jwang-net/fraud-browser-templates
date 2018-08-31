@@ -6,6 +6,7 @@ ARG version=None
 ARG filename=None
 ARG version
 ARG filename
+ENV BROWSER_VERSION=$version
 ENV DISPLAY=:99
 
 RUN apt-get -y update \
