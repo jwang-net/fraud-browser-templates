@@ -1,8 +1,15 @@
 Build docker containers with a specified browser and browser version.
 Currently only chrome and firefox supported. Browsers are continuously
 archived in the S3 bucket 'fraud-browsers-archive' as new versions are
-released. Requires docker to be installed in the environment that this is
-run in.
+released.
+
+## Setup
+Requires docker and python to be installed in the environment that this
+is run in.
+
+Docker Installation: https://docs.docker.com/install/#next-release
+
+Python library Installation: `pip install -r requirements.txt`
 
 
 ## Build Instructions
