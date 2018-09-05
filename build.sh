@@ -61,9 +61,11 @@ function main {
     fi
 }
 
+# Check that the script is being run from this directory
 [[ $(echo $(basename `git rev-parse --show-toplevel`)) = fraud-browser-templates ]] || echo "$(echo "ERROR: build.sh must be run from the root of repo fraud-browser-templates" ; exit 1)"
 export ROOT_DIR=`pwd`
 
+# Check script params
 for arg in "$@"; do
     case "${arg}" in
         --simple)

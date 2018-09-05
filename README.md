@@ -1,11 +1,9 @@
 Build docker containers with a specified browser and browser version.
 Currently only chrome and firefox supported. Browsers are continuously
 archived in the S3 bucket 'fraud-browsers-archive' as new versions are
-released.
+released. Requires docker to be installed in the environment that this is
+run in.
 
-## Requirements
-```
-```
 
 ## Build Instructions
 The build script will handle building docker images for the desired

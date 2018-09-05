@@ -23,5 +23,3 @@ RUN apt-get -qqy update \
 
 RUN pip install selenium==3.8.0
 RUN pip install pyvirtualdisplay
-
-CMD tail -f /dev/null
